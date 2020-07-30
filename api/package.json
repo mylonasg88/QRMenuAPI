@@ -1,0 +1,16 @@
+{
+  "name": "QRMenuAPI",
+  "version": "1.0.0",
+  "description": "QRMenu NodeJS on Docker",
+  "author": "George Mylonas mylonasg88@gmail.com",
+  "main": "server.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

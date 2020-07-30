@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  api:
+    container_name: qrapp_api
+    restart: always
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      PORT: 8100
+      HOST: "0.0.0.0"
+    ports:
+      - 8100:8100
+    volumes:
+      - ./api/src:/usr/src/api/src
