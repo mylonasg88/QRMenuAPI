@@ -13,6 +13,7 @@ services:
     environment:
       PORT: 8100
       HOST: "0.0.0.0"
+      PUBLIC_UPLOADS: "./public/uploads"
     ports:
       - 8100:8100
     networks:
@@ -26,6 +27,7 @@ services:
 #      - db
     volumes:
       - ./api/src:/usr/src/api/src
+      - ./api/public:/usr/src/api/public
 
   mongodb2:
     container_name: qrapp_mongo2
@@ -41,11 +43,11 @@ services:
     volumes:
       - mongodb:/data/db
 
-  adminmongo:
-    container_name: adminmongo
-    image: mrvautin/adminmongo
-    port:
-      - "1234:1234"
+#  adminmongo:
+#    container_name: adminmongo
+#    image: mrvautin/adminmongo
+#    ports:
+#      - "1234:1234"
 
 #  db:
 #    container_name: qrapp_db

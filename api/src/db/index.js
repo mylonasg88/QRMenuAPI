@@ -18,26 +18,29 @@ console.log(constr);
 console.log(noauth);
 
 var mongoURI = "mongodb://localhost:27017/test";
-mongoose.connect(smplconn, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
 
-var MongoDB = mongoose.connection;
-MongoDB.on('error', function(err) { console.log(err.message); });
-MongoDB.once('open', function() {
-
-    console.log("mongodb connection open");
-});
-
-// const connection = mongoose.createConnection(smplconn, {
+// ============ THIS PART WORKS ==============
+// mongoose.connect(smplconn, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true
-// }, (err, connection) => {
-//     if (err) console.log('Error connecting to DB', err.message);
-//     else
-//         console.log('Connected to Mongo DB');
 // });
+//
+// var MongoDB = mongoose.connection;
+// MongoDB.on('error', function(err) { console.log(err.message); });
+// MongoDB.once('open', function() {
+//
+//     console.log("mongodb connection open");
+// });
+//=============================================
+
+const connection = mongoose.createConnection(smplconn, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}, (err, connection) => {
+    if (err) console.log('Error connecting to DB', err.message);
+    else
+        console.log('====> Connected to Mongo DB! <====');
+});
 
 // var User = connection.model('User', {
 //     name: {type: String, required: false}
@@ -51,18 +54,4 @@ MongoDB.once('open', function() {
 //     console.log(err);
 // }
 
-// var con = mysql.createConnection({
-//     host: "qrapp_db", // or db as service name will work
-//     user: "root",
-//     password: "verysecret",
-//     database: "qrapp"
-//     // port: 3306
-// })
-//
-// con.connect((err) => {
-//    if(err) throw err;
-//    console.log('Connected to DB!');
-// });
-// exports.con = con;
-
-module.exports = MongoDB;
+module.exports = connection;
