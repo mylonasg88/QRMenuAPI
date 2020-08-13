@@ -1,57 +1,45 @@
-const router = require('express').Router();
-const Restaurants = require('../Models/Restaurant');
-const {writeImageBase64} = require('../utils/utils');
+const router = require("express").Router();
 
-router.get('/', async (req, res) => {
-    try {
-        const restaurants = await Restaurants.find();
-        console.log(restaurants);
-        res.send(restaurants);
-    } catch (err) {
-        console.log(err);
-        res.status(500).send('Error accurred ' + err.message);
-    }
+const Category = require("../models/Category");
+const { writeImageBase64 } = require("../utils/utils");
+const logger = require("../startup/logger");
+
+const restaurantController = require("../controllers/Restaurants");
+
+router.get("/", restaurantController.list);
+
+router.get("/:id", restaurantController.findOne);
+
+router.post("/", restaurantController.create);
+
+router.delete("/:id", restaurantController.delete);
+
+router.post("/picture", async (req, res) => {
+  try {
+    const image = req.body.image;
+    const fres = writeImageBase64(
+      image,
+      "public/uploads/restaurants/1",
+      req.body.filename
+    );
+    console.log(fres);
+    res.send({ image: fres });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send(err.message);
+  }
 });
 
-router.get('/:id', async (req, res) => {
-    try {
-        console.log(req.params.id)
-        const restaurant = await Restaurants.findOne({_id: req.params.id});
-
-        if (!restaurant) res.status(404).send(`Restaurant with id: ${req.params.id} was not found`);
-
-        res.send(restaurant);
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).send('Error accurred: ' + err.message);
-    }
+router.get("/:id/categories", async (req, res) => {
+  try {
+    const categories = await Category.find({ restaurant: req.params.id });
+    res.send(categories);
+  } catch (err) {
+    logger.info(err);
+    return res
+      .status(500)
+      .json({ error: true, message: "Something went very wrong!" });
+  }
 });
-
-router.post('/', async (req, res) => {
-    try {
-        console.log(req.body);
-        const restaurant = new Restaurants({
-            name: req.body.name,
-            image: req.body.image ?? ''
-        })
-        restaurant.save();
-
-        res.status(201).send(restaurant);
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
-
-router.post('/picture', async (req, res) => {
-    try {
-        const image = req.body.image;
-        const fres = writeImageBase64(image, 'public/uploads/restaurants/1', req.body.filename);
-        console.log(fres);
-        res.send({image: fres});
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).send(err.message);
-    }
-})
 
 module.exports = router;

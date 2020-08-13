@@ -1,47 +1,16 @@
 const router = require("express").Router();
-const {categoryItems} = require("../data/categories");
-const Category = require('../Models/Category');
-const Restaurant = require('../Models/Restaurant');
+const categoriesController = require("../controllers/Categories");
 
-router.get("/", async (req, res) => {
-    try {
-        const categories = await Category.find();
-        res.send(categories);
-    } catch (e) {
-        console.log(e);
-        return res.send([]);
-    }
-});
+router.get("/", categoriesController.list);
 
-router.post('/', async (req, res) => {
-    try {
-        console.log(req.body.restaurant);
-        const restaurant = await Restaurant.findById(req.body.restaurant);
-        console.log(restaurant);
+router.get("/restaurant/:id", categoriesController.list);
 
-        if (!restaurant) return res.status(404).send(`Restaurant with id: ${req.body.restaurant} was not found.`);
+router.post("/", categoriesController.create);
 
-        // make sure that restaurant doesn't have that Category already
-        const duplicate = await Category.findOne({name: req.body.name, restaurant: restaurant._id});
-        if(duplicate) return res.status(409).send(`Restaurant with id: ${req.body.restaurant} already has '${req.body.name}' category.`);
+router.get("/:id", categoriesController.findOne);
 
-        const category = new Category({
-            name: req.body.name,
-            image: req.body.image,
-            restaurant: restaurant._id
-        });
+router.patch("/:id", categoriesController.update);
 
-        category.save();
-
-        res.status(201).send({_id: category._id});
-    } catch (err) {
-        console.log(err.message);
-        return res.status(500).send('Error: Something went very wrong!');
-    }
-});
-
-router.get("/items", (req, res) => {
-    res.send(categoryItems);
-});
+router.delete("/:id", categoriesController.delete);
 
 module.exports = router;

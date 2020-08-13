@@ -1,21 +1,23 @@
 "use strict";
 
 const express = require("express");
-const bodyParser = require('body-parser');
-const cors = require('cors');
-// require('./startup/logger.js');
+const bodyParser = require("body-parser");
+// var upload = require("multer")();
 
+const cors = require("cors");
+const logger = require("./startup/logger.js");
 const app = express();
+
+// app.use(upload.array());
+app.use("/public", express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cors());
 
 //--- Routes
-require('./startup/routes')(app);
+require("./startup/routes")(app);
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
+//--- Services
 
 // Constants
 const PORT = process.env.PORT;

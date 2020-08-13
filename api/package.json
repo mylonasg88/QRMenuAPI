@@ -4,14 +4,20 @@
   "description": "QRMenu NodeJS on Docker",
   "author": "George Mylonas mylonasg88@gmail.com",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
+    "lodash": "^4.17.19",
     "mongoose": "^5.9.27",
     "mysql": "^2.18.1",
+    "pretty-error": "^2.1.1",
+    "q": "^1.5.1",
+    "randomstring": "^1.1.5",
     "winston": "^3.3.3"
   },
   "devDependencies": {
