@@ -1,4 +1,6 @@
-var router = require("express").Router();
+const router = require("express").Router();
+const RoutesList = require("../utils/routeList");
+
 // Services
 const response = require("../services/response");
 router.use(response);
@@ -6,6 +8,9 @@ router.use(response);
 const categories = require("../routes/categories");
 const restaurants = require("../routes/restaurants");
 const items = require("../routes/items");
+const profile = require("../routes/profile");
+
+// Independent routes. (Experimental)
 const chickensRouter = require("../routes/chickens");
 
 // Add Custom middleware for routes here
@@ -21,5 +26,13 @@ module.exports = function (app) {
   // add routes
   app.use("/categories", categories);
   app.use("/restaurants", restaurants);
+  app.use("/profile", profile);
+
+  // Independent routes
   app.use(chickensRouter);
+
+  if (process.env.NODE_ENV === "development") {
+  }
+  console.log(RoutesList);
+  RoutesList.web(app, "/route-list");
 };

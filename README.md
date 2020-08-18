@@ -13,6 +13,10 @@ Default parameters are:
 
 ## Tools
 
+### Routes
+
+All available routes are listed here [`http://localhost:8100/route-list`](http://localhost:8100/route-list)
+
 ### Ngrok
 
 For local development you might need to use `ngrok` for the QRMenu App to be able to access API on local host.
