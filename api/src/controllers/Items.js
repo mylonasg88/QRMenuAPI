@@ -1,6 +1,7 @@
 const con = require("../services/db").mongoose;
 
 const { writeImageBase64 } = require("../utils/utils");
+const Item = require("../models/Item");
 
 const ItemsController = {};
 
@@ -52,31 +53,31 @@ ItemsController.create = async () => {
   }
 };
 
-ItemsController.list = async () => {
+ItemsController.list = async (req, res) => {
   try {
     const items = await Item.find();
-    res.send(items);
+    res.ok(items);
   } catch (e) {
     console.log(e);
     return res.send([]);
   }
 };
 
-ItemsController.findOne = () => {
+ItemsController.findOne = (req, res) => {
   try {
   } catch (err) {
     console.log(err);
   }
 };
 
-ItemsController.update = () => {
+ItemsController.update = (req, res) => {
   try {
   } catch (err) {
     console.log(err);
   }
 };
 
-ItemsController.delete = () => {
+ItemsController.delete = (req, res) => {
   try {
   } catch (err) {
     console.log(err);

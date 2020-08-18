@@ -16,6 +16,7 @@ const chickensRouter = require("../routes/chickens");
 // Add Custom middleware for routes here
 router.use(function (req, res, next) {
   console.log("This is a middleware that is going to be used always");
+  console.log(req.method, req.url);
   next();
 });
 
@@ -27,6 +28,7 @@ module.exports = function (app) {
   app.use("/categories", categories);
   app.use("/restaurants", restaurants);
   app.use("/profile", profile);
+  app.use(items);
 
   // Independent routes
   app.use(chickensRouter);

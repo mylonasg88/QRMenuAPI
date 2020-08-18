@@ -1,12 +1,10 @@
 "use strict";
 
 // var db = require('../services/database').mongo;
-var db = require("../db/index");
+var db = require("../services/db/index");
 // var queue = require('../services/queue');
 
 var collection = "Items";
-
-var 
 
 var schemaObject = {
   // ++++++++++++++ Modify to your own schema ++++++++++++++++++
@@ -15,7 +13,7 @@ var schemaObject = {
   },
 
   toPop: {
-    type: db._mongoose.Schema.Types.ObjectId,
+    type: db.mongoose.Schema.Types.ObjectId,
     ref: "Categories",
   },
 
@@ -33,22 +31,22 @@ schemaObject.updatedAt = {
 };
 
 schemaObject.owner = {
-  type: db._mongoose.Schema.Types.ObjectId,
+  type: db.mongoose.Schema.Types.ObjectId,
   ref: "Accounts",
 };
 
 schemaObject.createdBy = {
-  type: db._mongoose.Schema.Types.ObjectId,
+  type: db.mongoose.Schema.Types.ObjectId,
   ref: "Accounts",
 };
 
 schemaObject.client = {
-  type: db._mongoose.Schema.Types.ObjectId,
+  type: db.mongoose.Schema.Types.ObjectId,
   ref: "Clients",
 };
 
 schemaObject.developer = {
-  type: db._mongoose.Schema.Types.ObjectId,
+  type: db.mongoose.Schema.Types.ObjectId,
   ref: "Users",
 };
 
@@ -58,7 +56,7 @@ schemaObject.tags = {
 };
 
 // Let us define our schema
-var Schema = db._mongoose.Schema(schemaObject);
+var Schema = db.mongoose.Schema(schemaObject);
 
 // Index all text for full text search
 // MyModel.find({$text: {$search: searchString}})
@@ -100,43 +98,28 @@ Schema.pre("save", function (next) {
   next();
 });
 
-Schema.post("init", function (doc) {
-  
-});
+Schema.post("init", function (doc) {});
 
-Schema.post("validate", function (doc) {
-  
-});
+Schema.post("validate", function (doc) {});
 
-Schema.post("save", function (doc) {
-  
-});
+Schema.post("save", function (doc) {});
 
-Schema.post("remove", function (doc) {
-  
-});
+Schema.post("remove", function (doc) {});
 
 Schema.pre("validate", function (next) {
-  
   next();
 });
 
-Schema.post("validate", function () {
-  
-});
+Schema.post("validate", function () {});
 
 Schema.pre("find", function (next) {
-  
   this.start = Date.now();
   next();
 });
 
 Schema.post("find", function (result) {
-  
   // prints returned documents
-  
   // prints number of milliseconds the query took
-  
 });
 
 Schema.pre("update", function (next) {
@@ -157,7 +140,7 @@ Schema.pre("update", function (next) {
   next();
 });
 
-var Model = db.model(collection, Schema);
-Model._mongoose = db._mongoose;
+var Model = db.connection.model(collection, Schema);
+Model.mongoose = db.mongoose;
 
 module.exports = Model;
