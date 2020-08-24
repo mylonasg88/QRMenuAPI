@@ -7,7 +7,7 @@ var itemsController = require("../controllers/Items");
 var service = "items";
 
 // get items or search items
-router.get("/" + service, itemsController.list);
+router.get("/" + service + "/category/:id", itemsController.list);
 
 // get chicken
 router.get("/" + service + "/:id", itemsController.findOne);
@@ -16,13 +16,15 @@ router.get("/" + service + "/:id", itemsController.findOne);
 router.post("/" + service, itemsController.create);
 
 // // update all records that matches the query
-router.put("/" + service, itemsController.update);
+// router.put("/" + service, itemsController.update);
+
+router.patch("/" + service + "/:id", itemsController.patch);
 
 // // update a single record
 // router.patch("/" + service + "/:id", itemsController.updateOne);
 
-// // delete all records that matches the query
-router.delete("/" + service, itemsController.delete);
+// // delete a record that matches the query
+router.delete("/" + service + "/:id", itemsController.delete);
 
 // // Delete a single record
 // router.delete("/" + service + "/:id", itemsController.deleteOne);

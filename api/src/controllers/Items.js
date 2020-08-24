@@ -2,54 +2,64 @@ const con = require("../services/db").mongoose;
 
 const { writeImageBase64 } = require("../utils/utils");
 const Item = require("../models/Item");
+const Category = require("../models/Category");
+const logger = require("../startup/logger");
 
 const ItemsController = {};
 
-ItemsController.create = async () => {
+/**
+ * Create an item that belongs to a restaurant.
+ *
+ * @param restaurant
+ * @param image
+ * @param name
+ */
+ItemsController.create = async (req, res) => {
   try {
-    console.log(req.body.restaurant);
-    const restaurant = await Restaurant.findById(req.body.restaurant);
-    console.log(restaurant);
+    console.log(req.body.category);
 
-    if (!restaurant)
-      return res
-        .status(404)
-        .send(`Restaurant with id: ${req.body.restaurant} was not found.`);
+    if (!req.body.category) res.badRequest("restaurant must be defined.");
+    const category = await Category.findById(req.body.category);
+    console.log(category);
+
+    if (!category)
+      return res.notFound(
+        `Restaurant with id: ${req.body.category} was not found.`
+      );
 
     // Upload picture to restaurant directory
     const imagePath = writeImageBase64(
       req.body.image,
-      `public/uploads/restaurants/${req.body.restaurant}`,
+      `public/uploads/restaurants/${req.body.category}`,
       req.body.filename
     );
     console.log(imagePath);
 
     // make sure that restaurant doesn't have that Category already
-    const duplicate = await Category.findOne({
+    const duplicate = await Item.findOne({
       name: req.body.name,
-      restaurant: restaurant._id,
+      category: category._id,
     });
+
     if (duplicate)
       return res
         .status(409)
         .send(
-          `Restaurant with id: ${req.body.restaurant} already has '${req.body.name}' category.`
+          `Restaurant with id: ${req.body.category} already has '${req.body.name}' category.`
         );
 
-    const category = new Category({
+    const item = new Item({
       name: req.body.name,
       image: imagePath,
-      restaurant: restaurant._id,
+      category: category._id,
     });
 
-    category.save();
+    await item.save();
 
-    res.status(201).send({ _id: category._id });
+    return res.status(201).send({ _id: item._id });
   } catch (err) {
     console.log(err.message);
-    return res
-      .status(500)
-      .json({ error: true, message: "Something went very wrong!" });
+    return res.serverError(err.message);
   }
 };
 
@@ -57,30 +67,65 @@ ItemsController.list = async (req, res) => {
   try {
     const items = await Item.find();
     res.ok(items);
-  } catch (e) {
-    console.log(e);
-    return res.send([]);
+  } catch (err) {
+    console.log(err);
+    return res.serverError(err.message);
   }
 };
 
-ItemsController.findOne = (req, res) => {
+ItemsController.findOne = async (req, res) => {
   try {
+    const id = req.params.id;
+    const item = await Item.findById(id);
+
+    if (!item) return res.notFound(`Item with '${id}' id was not found.`);
+
+    return res.ok(item);
   } catch (err) {
     console.log(err);
+    return res.serverError(err.message);
   }
 };
 
-ItemsController.update = (req, res) => {
+ItemsController.patch = async (req, res) => {
   try {
+    Item.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        // image: req.body.image ?? null,
+      },
+      (err, item) => {
+        logger.info("Updated item");
+        logger.info(item);
+
+        if (err) throw new Error(err.message);
+        res.ok();
+      }
+    );
   } catch (err) {
-    console.log(err);
+    logger.error(err);
+    return res.serverError(err.message);
   }
 };
 
-ItemsController.delete = (req, res) => {
+ItemsController.delete = async (req, res) => {
   try {
+    const id = req.params.id;
+    // return res.ok();
+    Item.findOneAndDelete({ _id: id }, function (err) {
+      logger.debug("Deleting an item");
+      if (err) throw new Error(err.message);
+      return res.ok();
+    });
+
+    // Item.deleteOne({ _id: id }, (err) => {
+    //   if (err) throw new Error(err.message);
+    //   return res.ok();
+    // });
   } catch (err) {
-    console.log(err);
+    logger.info(err);
+    return res.serverError(err.message);
   }
 };
 

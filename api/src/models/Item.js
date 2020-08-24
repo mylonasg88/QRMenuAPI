@@ -11,6 +11,12 @@ var schemaObject = {
   name: {
     type: "String",
   },
+  image: {
+    type: "String",
+  },
+  category: {
+    type: db.mongoose.Schema.Types.ObjectId,
+  },
 
   toPop: {
     type: db.mongoose.Schema.Types.ObjectId,

@@ -1,6 +1,6 @@
-const router = require('express').Router();
+const router = require("express").Router();
 
-module.exports = {
-  router.use('/chickens', require('./chickens'));
-  router.use('/categories',require('./categories'));
-}
+// module.exports = {
+//   router.use('/chickens', require('./chickens'));
+//   router.use('/categories',require('./categories'));
+// }
