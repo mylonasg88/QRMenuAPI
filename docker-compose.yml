@@ -1,5 +1,8 @@
 version: "3.8"
 
+networks:
+  qrapp-network:
+
 services:
   api:
     container_name: qrapp_api
@@ -10,7 +13,64 @@ services:
     environment:
       PORT: 8100
       HOST: "0.0.0.0"
+      PUBLIC_UPLOADS: "./public/uploads"
     ports:
       - 8100:8100
+    networks:
+      - qrapp-network
+    # This is crucial for application to access DB container
+    links:
+      #      - db:db
+      - mongodb2:mongodb2
+    depends_on:
+      - mongodb2
+    #      - db
     volumes:
       - ./api/src:/usr/src/api/src
+      - ./api/package.json:/usr/src/api/package.json
+      - ./api/test:/usr/src/api/test
+      - ./api/public:/usr/src/api/public
+
+  mongodb2:
+    container_name: qrapp_mongo2
+    image: mongo:4.4
+    restart: always
+    networks:
+      - qrapp-network
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: qrapp_user
+      MONGO_INITDB_ROOT_PASSWORD: verysecret
+    volumes:
+      - mongodb:/data/db
+
+#  adminmongo:
+#    container_name: adminmongo
+#    image: mrvautin/adminmongo
+#    ports:
+#      - "1234:1234"
+
+#  db:
+#    container_name: qrapp_db
+#    image: mysql:5.7
+#    restart: always
+#    environment:
+#      MYSQL_DATABASE: "qrapp"
+#      MYSQL_USER: "user"
+#      MYSQL_PASSWORD: "secret"
+#      MYSQL_ROOT_PASSWORD: "verysecret"
+#    ports:
+#      - "4306:3306"
+#    expose:
+#      - "4306"
+##    networks:
+##      - qrapp-network
+#    volumes:
+#      - app-db:/var/lib/mysql
+#      - ./db:/docker-entrypoint-initdb.d
+#        #    ADD setup.sql /docker-entrypoint-initdb.d
+
+volumes:
+  app-db:
+  mongodb:

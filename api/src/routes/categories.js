@@ -1,13 +1,16 @@
 const router = require("express").Router();
-const { categories, categoryItems } = require("../data/categories");
+const categoriesController = require("../controllers/Categories");
 
-router.get("/", (req, res) => {
-  res.send(categories);
-  // res.send([{ id: 1, name: "Pizzas" }]);
-});
+router.get("/", categoriesController.list);
 
-router.get("/items", (req, res) => {
-  res.send(categoryItems);
-});
+router.get("/restaurant/:id", categoriesController.list);
+
+router.post("/", categoriesController.create);
+
+router.get("/:id", categoriesController.findOne);
+
+router.patch("/:id", categoriesController.update);
+
+router.delete("/:id", categoriesController.delete);
 
 module.exports = router;
