@@ -2,7 +2,7 @@
 
 var Chickens = require("../models/Chickens");
 var Trash = require("../models").Trash;
-var q = require("q");
+// var q = require("q");
 // var queue = require('../services/queue');
 var debug = require("debug")("chickensController");
 
@@ -115,48 +115,48 @@ ChickensController.find = function (req, res, next) {
     }
 
     if (projection) {
-      q.all([ourProjection, total, totalResult])
-        .spread(function (resp, total, totalResult) {
-          return [question.select(resp), total, totalResult];
-        })
-        .spread(function (resp, total, totalResult) {
-          var ourLastId;
-          if (resp.length === 0) {
-            ourLastId = null;
-          } else {
-            ourLastId = resp[resp.length - 1]._id;
-          }
-          var extraData = {};
-          extraData.limit = limit * 1;
-          extraData.total = total;
-          extraData.totalResult = totalResult;
-          extraData.lastId = ourLastId;
-          extraData.isLastPage = totalResult < limit ? true : false;
-          res.ok(resp, false, extraData);
-        })
-        .catch(function (err) {
-          next(err);
-        });
+      // q.all([ourProjection, total, totalResult])
+      //   .spread(function (resp, total, totalResult) {
+      //     return [question.select(resp), total, totalResult];
+      //   })
+      //   .spread(function (resp, total, totalResult) {
+      //     var ourLastId;
+      //     if (resp.length === 0) {
+      //       ourLastId = null;
+      //     } else {
+      //       ourLastId = resp[resp.length - 1]._id;
+      //     }
+      //     var extraData = {};
+      //     extraData.limit = limit * 1;
+      //     extraData.total = total;
+      //     extraData.totalResult = totalResult;
+      //     extraData.lastId = ourLastId;
+      //     extraData.isLastPage = totalResult < limit ? true : false;
+      //     res.ok(resp, false, extraData);
+      //   })
+      //   .catch(function (err) {
+      //     next(err);
+      //   });
     } else {
-      q.all([question, total, totalResult])
-        .spread(function (resp, total, totalResult) {
-          var ourLastId;
-          if (resp.length === 0) {
-            ourLastId = null;
-          } else {
-            ourLastId = resp[resp.length - 1]._id;
-          }
-          var extraData = {};
-          extraData.limit = limit * 1;
-          extraData.total = total;
-          extraData.lastId = ourLastId;
-          extraData.totalResult = totalResult;
-          extraData.isLastPage = totalResult < limit ? true : false;
-          res.ok(resp, false, extraData);
-        })
-        .catch(function (err) {
-          next(err);
-        });
+      // q.all([question, total, totalResult])
+      //   .spread(function (resp, total, totalResult) {
+      //     var ourLastId;
+      //     if (resp.length === 0) {
+      //       ourLastId = null;
+      //     } else {
+      //       ourLastId = resp[resp.length - 1]._id;
+      //     }
+      //     var extraData = {};
+      //     extraData.limit = limit * 1;
+      //     extraData.total = total;
+      //     extraData.lastId = ourLastId;
+      //     extraData.totalResult = totalResult;
+      //     extraData.isLastPage = totalResult < limit ? true : false;
+      //     res.ok(resp, false, extraData);
+      //   })
+      //   .catch(function (err) {
+      //     next(err);
+      //   });
     }
   }
 };

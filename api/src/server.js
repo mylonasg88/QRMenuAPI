@@ -22,6 +22,14 @@ require("./startup/routes")(app);
 // Constants
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
+console.log(process.env);
 
-app.listen(PORT, HOST);
+let server;
+if (process.env.NODE_ENV === "test") {
+  server = app.listen(3456, HOST);
+} else {
+  server = app.listen(PORT, HOST);
+}
 console.log(`Running WhatItLookLike Server on http://${HOST}:${PORT}`);
+
+module.exports = server;

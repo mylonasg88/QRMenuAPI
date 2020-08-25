@@ -1,7 +1,4 @@
 const winston = require("winston");
-var PrettyError = require("pretty-error");
-var pe = new PrettyError();
-// pe.start();
 
 // var renderedError = pe.render(new Error('Some error message'));
 // console.log(renderedError);
@@ -37,17 +34,17 @@ if (process.env.NODE_ENV !== "production") {
 
 // Catch uncaught Exceptions
 process.on("uncaughtException", async (ex) => {
-  console.log("ANCAUGHT EXCEPTION ACCURED.");
+  // console.log("ANCAUGHT EXCEPTION ACCURED.");
   //   logger.error(ex.message, ex);
-  console.log(pe.render(ex));
+  // console.log(pe.render(ex));
   //   pe.render(ex);
   //   process.exit(1);
 });
 
 process.on("unhandledRejection", async (ex) => {
-  console.log("Unhandled Rejection Accured.");
+  // console.log("Unhandled Rejection Accured.");
   //   logger.error(ex.message, ex);
-  logger.error(pe.render(ex));
+  // logger.error(pe.render(ex));
   //   process.exit(1);
 });
 

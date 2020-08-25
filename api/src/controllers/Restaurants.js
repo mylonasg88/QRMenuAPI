@@ -11,13 +11,18 @@ restaurantController.create = async (req, res) => {
   try {
     const _id = new Mongoose.Types.ObjectId();
 
+    console.log("req.body.name: ", req.body.name);
+    console.log("req.body.image: ", typeof req.body.image);
+    console.log("req.body.filename: ", req.body.filename);
+    console.log(process.env);
+
     // Upload picture to restaurant directory
     const imagePath = writeImageBase64(
       req.body.image,
       `public/uploads/restaurants/${_id}`,
       req.body.filename
     );
-    console.log(imagePath);
+    console.log("imagePath: " + imagePath);
 
     const restaurant = new Restaurant({
       _id: _id,
@@ -25,10 +30,12 @@ restaurantController.create = async (req, res) => {
       image: imagePath,
     });
 
-    await restaurant.save();
+    restaurant.save();
+    console.log(restaurant);
 
-    res.status(200).send(restaurant);
+    res.status(200).send({ _id: restaurant._id });
   } catch (err) {
+    console.log(err.message.red);
     res.badRequest(err.message);
   }
 };
@@ -36,7 +43,7 @@ restaurantController.create = async (req, res) => {
 restaurantController.list = async (req, res) => {
   try {
     const restaurants = await Restaurant.find();
-    console.log(restaurants);
+    // console.log(restaurants);
     res.ok(restaurants);
   } catch (err) {
     console.log(err);

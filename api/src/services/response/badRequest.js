@@ -1,10 +1,8 @@
 "use strict";
 // var log = require("../logger");
 var _ = require("lodash");
-// var queue = require('../queue');
 
 module.exports = function (data, message) {
-  console.log("Bad Request");
   // log.warn("Sending bad request response: ", data, message || "bad request");
   var req = this.req;
   var res = this;
@@ -21,7 +19,7 @@ module.exports = function (data, message) {
   if (data) {
     this.status(400).json({
       status: "error",
-      data: data,
+      data,
       message: message ? message : "bad request",
     });
   } else {

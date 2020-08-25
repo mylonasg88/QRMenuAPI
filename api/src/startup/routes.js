@@ -1,3 +1,4 @@
+var colors = require("colors");
 const router = require("express").Router();
 const RoutesList = require("../utils/routeList");
 
@@ -11,12 +12,14 @@ const items = require("../routes/items");
 const profile = require("../routes/profile");
 
 // Independent routes. (Experimental)
-const chickensRouter = require("../routes/chickens");
+// const chickensRouter = require("../routes/chickens");
 
 // Add Custom middleware for routes here
 router.use(function (req, res, next) {
   // console.log("This is a middleware that is going to be used always");
-  console.log(req.method, req.url);
+  if (process.env.NODE_ENV === "development") {
+  }
+  // console.log(req.method.green, req.url.green);
   next();
 });
 
@@ -31,7 +34,7 @@ module.exports = function (app) {
   app.use(items);
 
   // Independent routes
-  app.use(chickensRouter);
+  // app.use(chickensRouter);
 
   if (process.env.NODE_ENV === "development") {
   }

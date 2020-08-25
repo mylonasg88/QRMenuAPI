@@ -20,13 +20,15 @@ services:
       - qrapp-network
     # This is crucial for application to access DB container
     links:
-#      - db:db
+      #      - db:db
       - mongodb2:mongodb2
     depends_on:
       - mongodb2
-#      - db
+    #      - db
     volumes:
       - ./api/src:/usr/src/api/src
+      - ./api/package.json:/usr/src/api/package.json
+      - ./api/test:/usr/src/api/test
       - ./api/public:/usr/src/api/public
 
   mongodb2:
@@ -72,4 +74,3 @@ services:
 volumes:
   app-db:
   mongodb:
-

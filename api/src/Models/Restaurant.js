@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const con = require("../services/db").connection;
+const connection = require("../services/db/mongo");
 
 const logger = require("../startup/logger");
 
@@ -35,13 +35,13 @@ restaurantSchema.pre("save", function (next, doc) {
   next();
 });
 
-restaurantSchema.post("save", function (doc, next) {
-  console.log("Post Save");
-  console.log(doc);
-  const ourDoc = this;
-  console.log(ourDoc);
-  next();
-});
+// restaurantSchema.post("save", function (doc, next) {
+//   console.log("Post Save");
+//   // console.log(doc);
+//   const ourDoc = this;
+//   console.log(ourDoc);
+//   next();
+// });
 
 // restaurantSchema.post("create", function (next, b) {
 //   console.log("Post Create");
@@ -49,6 +49,6 @@ restaurantSchema.post("save", function (doc, next) {
 //   next();
 // });
 
-const Restaurant = con.model("Restaurant", { restaurantSchema });
+const Restaurant = connection.model("Restaurant", restaurantSchema);
 
 module.exports = Restaurant;

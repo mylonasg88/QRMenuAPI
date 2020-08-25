@@ -4,11 +4,11 @@
   "description": "QRMenu NodeJS on Docker",
   "author": "George Mylonas mylonasg88@gmail.com",
   "main": "server.js",
-  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
+    "aes-js": "^3.1.2",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
@@ -21,6 +21,8 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "ascii-table": "0.0.9",
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   }
 }

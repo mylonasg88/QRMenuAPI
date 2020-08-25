@@ -7,6 +7,12 @@ const { writeImageBase64 } = require("../utils/utils");
 
 const categoriesController = {};
 
+/**
+ *
+ * @param {string} name
+ * @param {string} image
+ * @param {string} restaurant
+ */
 categoriesController.create = async (req, res) => {
   try {
     console.log(req.body.restaurant);
@@ -57,6 +63,7 @@ categoriesController.create = async (req, res) => {
 
 categoriesController.list = async (req, res) => {
   try {
+    // throw new Error("Error");
     logger.info("Getting all Categories");
     const categories = await Category.find();
 
@@ -97,6 +104,9 @@ categoriesController.update = async (req, res) => {
 };
 
 categoriesController.delete = async (req, res) => {
+  console.log(req.params.id.red);
+  return res.ok("Deeltedddd");
+
   Category.findByIdAndDelete(req.params.id, (err) => {
     if (err) res.badRequest(err.message);
     else res.ok("Deleted");
