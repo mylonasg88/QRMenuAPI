@@ -12,6 +12,8 @@ router.get("/:id", restaurantController.findOne);
 
 router.post("/", restaurantController.create);
 
+router.patch("/:id", restaurantController.updateOne);
+
 router.delete("/:id", restaurantController.delete);
 
 router.post("/picture", async (req, res) => {

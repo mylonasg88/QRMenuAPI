@@ -1,4 +1,5 @@
 const con = require("../services/db").mongoose;
+const Joi = require("joi");
 const logger = require("../startup/logger");
 
 const Restaurant = require("../models/Restaurant");
@@ -15,9 +16,20 @@ const categoriesController = {};
  */
 categoriesController.create = async (req, res) => {
   try {
-    console.log(req.body.restaurant);
+    const schema = Joi.object({
+      name: Joi.string().required(),
+      image: Joi.string().required(),
+      restaurant: Joi.string().required(),
+    });
+
+    const { error, value } = schema.validate(req.body);
+
+    if (error) {
+      console.log(error);
+      return res.badRequest("Please provide with more data");
+    }
+
     const restaurant = await Restaurant.findById(req.body.restaurant);
-    console.log(restaurant);
 
     if (!restaurant)
       return res

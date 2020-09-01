@@ -4,11 +4,23 @@ const Restaurant = require("../models/Restaurant");
 const { writeImageBase64 } = require("../utils/utils");
 const logger = require("../startup/logger");
 const { ObjectId } = require("mongoose");
+const { formSchema } = require("../Models/Restaurant");
 
 const restaurantController = {};
 
 restaurantController.create = async (req, res) => {
   try {
+    console.log("Create");
+
+    // validate form
+    const { error, value } = formSchema.validate(req.body);
+    if (error) {
+      console.log(error);
+      return res.badRequest("Please provide with more data");
+    }
+
+    req.body = value;
+
     const _id = new Mongoose.Types.ObjectId();
 
     console.log("req.body.name: ", req.body.name);
@@ -43,7 +55,7 @@ restaurantController.create = async (req, res) => {
 restaurantController.list = async (req, res) => {
   try {
     const restaurants = await Restaurant.find();
-    // console.log(restaurants);
+
     res.ok(restaurants);
   } catch (err) {
     console.log(err);
@@ -62,12 +74,26 @@ restaurantController.findOne = async (req, res) => {
     res.ok(restaurant);
   } catch (err) {
     logger.log(err.message);
-    res.badRequest("Error accurred: " + err.message);
+    res.badRequest(err.message);
   }
 };
 
 restaurantController.updateOne = async (req, res) => {
-  res.ok("Created");
+  try {
+    Restaurant.findById(req.params.id, function (err, doc) {
+      if (err) throw err;
+      if (!doc) return res.notFound(`Document no found.`);
+      doc.name = req.body.name;
+      doc.save((err) => {
+        console.log(err);
+
+        return res.ok("Super good");
+      });
+    });
+  } catch (err) {
+    logger.log(err.message);
+    req.badRequest(err.message);
+  }
 };
 
 restaurantController.delete = async (req, res) => {

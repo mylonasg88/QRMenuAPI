@@ -5,6 +5,7 @@ const RoutesList = require("../utils/routeList");
 // Services
 const response = require("../services/response");
 router.use(response);
+
 // Routes
 const categories = require("../routes/categories");
 const restaurants = require("../routes/restaurants");

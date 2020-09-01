@@ -2,15 +2,14 @@ const request = require("supertest");
 var fs = require("fs");
 
 const server = require("../../src/server");
-// const connection = require("../../src/services/db/mongo");
 const { MongoClient } = require("mongodb");
 const config = require("../../src/config/index");
-
-// const { expect } = require("chai");
 
 describe("Restaraunts Controller", () => {
   let connection;
   let db;
+  // id for item manipulation
+  let _id = "5f35011241221a0d62d8b098";
 
   beforeAll(async (done) => {
     console.log("Before all tests");
@@ -30,7 +29,7 @@ describe("Restaraunts Controller", () => {
     done();
   });
 
-  it.only("/POST a restaurant", (done) => {
+  test("/POST a restaurant", (done) => {
     var base64Image = base64_encode("test/_files/athenssparestaurant.jpeg");
 
     return request(server)
@@ -41,13 +40,10 @@ describe("Restaraunts Controller", () => {
         image: base64Image,
       })
       .set("Accept", "application/json")
-
       .expect(200)
       .then((response) => {
-        console.log("FINISHED CREATING A RESTAURANT");
-
-        // console.log("resonse", response);
         expect(response.body).toHaveProperty("_id");
+        _id = response.body._id;
 
         done();
       });
@@ -57,11 +53,7 @@ describe("Restaraunts Controller", () => {
     return request(server)
       .get("/restaurants")
       .then((response) => {
-        // console.log(response.body);
-        console.log("RESPONSE FINISHED ==============");
-
         const item = response.body.data[0];
-        console.log(item);
 
         expect(item).toHaveProperty("_id");
         expect(item).toHaveProperty("name");
@@ -78,8 +70,6 @@ describe("Restaraunts Controller", () => {
     return request(server)
       .get(`/restaurants/${restaurantId}`)
       .then((response) => {
-        console.log("RESPONSE FINISHED");
-
         // Response structure must be correct
         expect(response.body.status).toBe("success");
         expect(response.status).toBe(200);
@@ -97,34 +87,25 @@ describe("Restaraunts Controller", () => {
       });
   });
 
-  // test("/GET all categories", async (done) => {
-  //   const categories = db.collection("categories");
-  //   const allCategories = await categories.find();
+  test("/PATCH a restaurant", (done) => {
+    return request(server)
+      .patch(`/restaurants/${_id}`)
+      .send({
+        name: "Awesome restaurant 2",
+      })
+      .expect(200, done);
+  });
 
-  //   // allCategories.forEach((item) => {
-  //   //   // console.log(item);
-  //   // });
+  test("/PATCH a restaurant", (done) => {
+    const _idThatDoesntExist = "5f35011241221a0d62d8b090";
 
-  //   request(server)
-  //     .get("/categories")
-  //     .set("Accept", "application/json")
-  //     .then((response) => {
-  //       expect(response.body.status).toBe("success");
-  //       expect(response.status).toBe(200);
-  //       expect(response.body.data.length).toBeGreaterThan(0);
-
-  //       const item = response.body.data[0];
-
-  //       expect(item).toHaveProperty("_id");
-  //       expect(item).toHaveProperty("name");
-  //       expect(item).toHaveProperty("image");
-  //       expect(item).toHaveProperty("restaurant");
-  //       expect(item).toHaveProperty("createdAt");
-  //       expect(item).toHaveProperty("updatedAt");
-
-  //       done();
-  //     });
-  // });
+    return request(server)
+      .patch(`/restaurants/${_idThatDoesntExist}`)
+      .send({
+        name: "Awesome restaurant 2",
+      })
+      .expect(404, done);
+  });
 });
 
 function base64_encode(file) {
@@ -132,6 +113,4 @@ function base64_encode(file) {
   var bitmap = "data:image/jpeg;base64," + fs.readFileSync(file, "base64");
   // console.log(bitmap);
   return bitmap;
-  // convert binary data to base64 encoded string
-  // return new Buffer.alloc(bitmap).toString("base64");
 }
